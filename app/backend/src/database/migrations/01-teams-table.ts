@@ -11,9 +11,10 @@ export default {
         autoIncrement: true,
         allowNull: false,
       },
-      name: {
+      teamName: {
         type: DataTypes.STRING,
         allowNull: false,
+        field: 'team_name'
       }
     }
   ),
