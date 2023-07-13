@@ -24,6 +24,13 @@ describe('Tests the teams routes', () => {
     expect(chaiHttpResponse.body).to.be.deep.equal(teams);
   });
 
+  it('GET /teams with a internal error', async () => {
+    sinon.stub(SequelizeTeam, 'findAll').throws();
+    chaiHttpResponse = await chai.request(app).get('/teams');
+    expect(chaiHttpResponse).to.have.status(500);
+    expect(chaiHttpResponse.body).to.be.deep.equal({ message: 'Internal server error'});
+  });
+
   it('GET /teams/:id',async () => {
     const returnTeam = SequelizeTeam.build(teams[0]);
     sinon.stub(SequelizeTeam, 'findByPk').resolves(returnTeam);
@@ -37,5 +44,12 @@ describe('Tests the teams routes', () => {
     chaiHttpResponse = await chai.request(app).get('/teams/999');
     expect(chaiHttpResponse).to.have.status(404);
     expect(chaiHttpResponse.body).to.be.deep.equal({ message: 'Team not found' });
+  });
+
+  it('GET /teams/:id with a internal error', async () => {
+    sinon.stub(SequelizeTeam, 'findAll').throws();
+    chaiHttpResponse = await chai.request(app).get('/teams/1');
+    expect(chaiHttpResponse).to.have.status(500);
+    expect(chaiHttpResponse.body).to.be.deep.equal({ message: 'Internal server error'});
   });
 });
