@@ -1,5 +1,5 @@
 import ITeam from './ITeam';
+import { Create, Read } from './ICRUDModel';
 
-export default interface ITeamModel {
-  getAll(): Promise<ITeam[]>;
-}
+interface ITeamModel extends Read<ITeam>, Create<ITeam> {}
+export default ITeamModel;
