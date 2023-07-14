@@ -1,5 +1,6 @@
 import * as express from 'express';
 import { teamRouter } from './routers';
+import LoginController from './controllers/Login.controller';
 
 class App {
   public app: express.Express;
@@ -17,6 +18,7 @@ class App {
 
   private routers = () => {
     this.app.use('/teams', teamRouter);
+    this.app.post('/login', (new LoginController()).login);
   };
 
   private config():void {

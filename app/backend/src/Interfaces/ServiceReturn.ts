@@ -3,7 +3,7 @@ export type ServiceReturnSuccessfull<T> = {
   status: SuccessfullStatusCode;
   data: T;
 };
-export type ErrorStatusCode = 500 | 400;
+export type ErrorStatusCode = 500 | 400 | 401 | 404;
 export type ServiceReturnError = {
   status: ErrorStatusCode;
   data: { message: string };
