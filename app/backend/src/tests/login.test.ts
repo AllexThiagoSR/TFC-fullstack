@@ -3,9 +3,12 @@ import * as chai from 'chai';
 // @ts-ignore
 import chaiHttp = require('chai-http');
 import SequelizeUser from '../database/models/SequelizeUser'
+import * as bcrypt from 'bcryptjs'
+import * as jwt from 'jsonwebtoken'
 import { app } from '../app';
 import { Response } from 'superagent';
 import { login, loginWithouPassword, loginWithoutEmail, user } from './mocks/users.mocks';
+import JWTUtils from '../utils/JWTUtils';
 
 chai.use(chaiHttp);
 
@@ -19,9 +22,11 @@ describe('Tests the login route', () => {
   it('POST /login', async () => {
     const returnUser = SequelizeUser.build(user)
     sinon.stub(SequelizeUser, 'findOne').resolves(returnUser);
+    sinon.stub(bcrypt, 'compareSync').returns(true);
+    sinon.stub(JWTUtils.prototype, 'createToken').returns('abcdefg');
     chaiHttpResponse = await chai.request(app).post('/login').send(login);
     expect(chaiHttpResponse).to.have.status(200);
-    expect(chaiHttpResponse.body).to.be.have.property('token');
+    expect(chaiHttpResponse.body).to.be.have.property('token', 'abcdefg');
   });
 
   it('POST /login without email', async () => {
