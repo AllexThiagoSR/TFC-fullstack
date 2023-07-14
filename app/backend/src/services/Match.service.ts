@@ -1,3 +1,4 @@
+import NewEntity from '../Interfaces/NewEntity';
 import IMatch from '../Interfaces/IMatch';
 import { ServiceReturn } from '../Interfaces/ServiceReturn';
 import MatchModel from '../models/Match.model';
@@ -33,6 +34,16 @@ export default class MatchService {
       return { status: 200, data: { message: 'Finished' } };
     } catch (error) {
       return MatchService.internalServerError as ServiceReturn<{ message: 'Finished' }>;
+    }
+  };
+
+  update = async (id: string | number, data: Partial<NewEntity<IMatch>>):
+  Promise<ServiceReturn<{ message: 'Score updated' }>> => {
+    try {
+      await this.model.update(id, data);
+      return { status: 200, data: { message: 'Score updated' } };
+    } catch (error) {
+      return MatchService.internalServerError as ServiceReturn<{ message: 'Score updated' }>;
     }
   };
 }

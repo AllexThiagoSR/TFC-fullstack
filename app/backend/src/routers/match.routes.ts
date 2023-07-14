@@ -8,6 +8,8 @@ const tokenValidator = new ValidateToken();
 
 router.get('/', controller.getAll);
 
+router.patch('/:id', tokenValidator.validate, controller.update);
+
 router.patch('/:id/finish', tokenValidator.validate, controller.finish);
 
 export default router;

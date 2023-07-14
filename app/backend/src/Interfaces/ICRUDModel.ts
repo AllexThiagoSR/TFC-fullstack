@@ -8,3 +8,7 @@ export interface Read<T> {
 export interface Create<T> {
   create(data: NewEntity<T>): Promise<T>;
 }
+
+export interface Update<T> {
+  update(id: string | number, data: Partial<NewEntity<T>>): Promise<T>
+}
