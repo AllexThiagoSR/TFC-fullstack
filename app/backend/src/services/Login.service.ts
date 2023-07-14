@@ -1,6 +1,9 @@
 import { ServiceReturn } from '../Interfaces/ServiceReturn';
 import LoginData from '../Interfaces/LoginData';
 import UserModel from '../models/User.model';
+import JWTUtils from '../utils/JWTUtils';
+
+const jwt = new JWTUtils();
 
 export default class LoginService {
   private model: UserModel;
@@ -15,6 +18,8 @@ export default class LoginService {
     if (!user || user.password !== password) {
       return { status: 401, data: { message: 'Incorrect email or password' } };
     }
-    return { status: 200, data: { token: '123456e' } };
+    const { id, username, role } = user;
+    const token = jwt.createToken({ id, username, role });
+    return { status: 200, data: { token } };
   };
 }
