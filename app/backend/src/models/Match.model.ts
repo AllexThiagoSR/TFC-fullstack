@@ -53,6 +53,10 @@ export default class MatchModel implements IMatchModel {
     return match;
   }
 
+  async finish(id: string | number): Promise<void> {
+    await this.matchModel.update({ inProgress: false }, { where: { id } });
+  }
+
   async create(data: NewEntity<IMatch>): Promise<IMatch> {
     const match = await this.matchModel.create(data);
     return match;

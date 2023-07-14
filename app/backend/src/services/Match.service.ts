@@ -26,4 +26,13 @@ export default class MatchService {
       return MatchService.internalServerError as ServiceReturn<IMatch[]>;
     }
   };
+
+  finish = async (id: string | number): Promise<ServiceReturn<{ message: 'Finished' }>> => {
+    try {
+      await this.model.finish(id);
+      return { status: 200, data: { message: 'Finished' } };
+    } catch (error) {
+      return MatchService.internalServerError as ServiceReturn<{ message: 'Finished' }>;
+    }
+  };
 }
