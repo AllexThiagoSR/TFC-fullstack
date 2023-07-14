@@ -18,9 +18,9 @@ export default class MatchService {
     this.model = model;
   }
 
-  getAll = async (): Promise<ServiceReturn<IMatch[]>> => {
+  getAll = async (inProgress?: string): Promise<ServiceReturn<IMatch[]>> => {
     try {
-      const matches = await this.model.getAll();
+      const matches = await this.model.getAll(inProgress);
       return { status: 200, data: matches };
     } catch (error) {
       return MatchService.internalServerError as ServiceReturn<IMatch[]>;

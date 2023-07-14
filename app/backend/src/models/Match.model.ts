@@ -7,9 +7,14 @@ import IMatchModel from '../Interfaces/IMatchModel';
 export default class MatchModel implements IMatchModel {
   public matchModel = SequelizeMatch;
 
-  async getAll(): Promise<IMatch[]> {
+  private static addInprogressFilter = (inProgress?: string) => (
+    !inProgress ? {} : { where: { inProgress: inProgress === 'true' } }
+  );
+
+  async getAll(inProgress?: string): Promise<IMatch[]> {
     const matches = await this.matchModel.findAll(
       {
+        ...MatchModel.addInprogressFilter(inProgress),
         include: [
           {
             model: SequelizeTeam,
