@@ -1,4 +1,4 @@
 import teamRouter from './team.routes';
-import userRouter from './user.routes';
+import loginRouter from './login.routes';
 
-export { teamRouter, userRouter };
+export { teamRouter, loginRouter };

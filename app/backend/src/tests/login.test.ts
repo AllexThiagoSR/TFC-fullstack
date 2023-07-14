@@ -7,7 +7,7 @@ import * as bcrypt from 'bcryptjs'
 import * as jwt from 'jsonwebtoken'
 import { app } from '../app';
 import { Response } from 'superagent';
-import { login, loginWithouPassword, loginWithoutEmail, user } from './mocks/users.mocks';
+import { login, loginWithInvalidEmail, loginWithInvalidPassword, loginWithouPassword, loginWithoutEmail, user } from './mocks/users.mocks';
 import JWTUtils from '../utils/JWTUtils';
 
 chai.use(chaiHttp);
@@ -39,5 +39,24 @@ describe('Tests the login route', () => {
     chaiHttpResponse = await chai.request(app).post('/login').send(loginWithouPassword);
     expect(chaiHttpResponse).to.have.status(400);
     expect(chaiHttpResponse.body).to.be.deep.equal({ message: 'All fields must be filled' });
+  });
+
+  it('POST /login with invalid email', async () => {
+    chaiHttpResponse = await chai.request(app).post('/login').send(loginWithInvalidEmail);
+    expect(chaiHttpResponse).to.have.status(401);
+    expect(chaiHttpResponse.body).to.be.deep.equal({ message: 'Invalid email or password' });
+  });
+
+  it('POST /login with invalid password', async () => {
+    chaiHttpResponse = await chai.request(app).post('/login').send(loginWithInvalidPassword);
+    expect(chaiHttpResponse).to.have.status(401);
+    expect(chaiHttpResponse.body).to.be.deep.equal({ message: 'Invalid email or password' });
+  });
+
+  it('POST /login with inexistent information', async () => {
+    sinon.stub(SequelizeUser, 'findOne').resolves(null);
+    chaiHttpResponse = await chai.request(app).post('/login').send(login);
+    expect(chaiHttpResponse).to.have.status(401);
+    expect(chaiHttpResponse.body).to.be.have.property('message', 'Invalid email or password');
   });
 });

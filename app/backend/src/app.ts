@@ -1,7 +1,5 @@
 import * as express from 'express';
-import { teamRouter } from './routers';
-import LoginController from './controllers/Login.controller';
-import ValidateLogin from './middlewares/ValidateLogin';
+import { loginRouter, teamRouter } from './routers';
 
 class App {
   public app: express.Express;
@@ -19,7 +17,7 @@ class App {
 
   private routers = () => {
     this.app.use('/teams', teamRouter);
-    this.app.post('/login', ValidateLogin.validateLogin, (new LoginController()).login);
+    this.app.use('/login', loginRouter);
   };
 
   private config():void {
