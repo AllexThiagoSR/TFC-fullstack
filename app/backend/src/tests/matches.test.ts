@@ -20,4 +20,11 @@ describe('Tests the matches routes', () => {
     expect(chaiHttpResponse).to.have.status(200);
     expect(chaiHttpResponse.body).to.be.deep.equal(matches);
   });
+
+  it('GET /matches internal error', async () => {
+    sinon.stub(SequelizeMatch, 'findAll').throws();
+    const chaiHttpResponse = await chai.request(app).get('/matches');
+    expect(chaiHttpResponse).to.have.status(500);
+    expect(chaiHttpResponse.body).to.be.deep.equal({ message: 'Internal server error' });
+  });
 });
