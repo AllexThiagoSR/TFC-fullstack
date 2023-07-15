@@ -51,6 +51,12 @@ export default class MatchService {
   create = async (data: NewEntity<IMatch>): Promise<ServiceReturn<IMatch>> => {
     try {
       const { homeTeamId, awayTeamId } = data;
+      if (homeTeamId === awayTeamId) {
+        return {
+          status: 422,
+          data: { message: 'It is not possible to create a match with two equal teams' },
+        };
+      }
       const teams = await (new TeamModel()).getByFieldFilter('id', [homeTeamId, awayTeamId]);
       if (teams.length < 2) {
         return { status: 404, data: { message: 'There is no team with such id!' } };
