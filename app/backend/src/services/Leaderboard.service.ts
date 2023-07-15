@@ -31,6 +31,11 @@ export default class LeaderboardService {
   leaderboardHome = async () => {
     const matches = await this.model.getAll('false') as ToAnalize[];
     const teamsStatus = LeaderboardService.getTeamsStatus(matches, 'home');
-    return { status: 200, data: teamsStatus };
+    const sorted = teamsStatus.sort((a, b) => {
+      const valueA = (a.totalPoints + a.totalVictories + a.goalsBalance + a.goalsFavor);
+      const valueB = (b.totalPoints + b.totalVictories + b.goalsBalance + b.goalsFavor);
+      return valueB - valueA;
+    });
+    return { status: 200, data: sorted };
   };
 }
