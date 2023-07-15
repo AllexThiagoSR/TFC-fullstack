@@ -17,4 +17,21 @@ const matches = [
   }
 ];
 
-export { matches };
+const matchToCreate = {
+  "id": 1,
+  "homeTeamId": 16,
+  "awayTeamId": 8,
+  "homeTeamGoals": 2,
+  "awayTeamGoals": 2,
+  "inProgress": true,
+};
+
+const matchWithEqualTeam = {
+  "homeTeamId": 16,
+  "awayTeamId": 16,
+  "homeTeamGoals": 2,
+  "awayTeamGoals": 2,
+  "inProgress": true,
+}
+
+export { matches, matchToCreate, matchWithEqualTeam };
