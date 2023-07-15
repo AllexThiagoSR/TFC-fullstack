@@ -1,4 +1,4 @@
-export type SuccessfullStatusCode = 200;
+export type SuccessfullStatusCode = 200 | 201 | 204;
 export type ServiceReturnSuccessfull<T> = {
   status: SuccessfullStatusCode;
   data: T;

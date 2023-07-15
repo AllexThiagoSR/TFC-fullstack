@@ -2,6 +2,7 @@ import NewEntity from '../Interfaces/NewEntity';
 import IMatch from '../Interfaces/IMatch';
 import { ServiceReturn } from '../Interfaces/ServiceReturn';
 import MatchModel from '../models/Match.model';
+import TeamModel from '../models/Team.model';
 
 export default class MatchService {
   private model: MatchModel;
@@ -44,6 +45,20 @@ export default class MatchService {
       return { status: 200, data: { message: 'Score updated' } };
     } catch (error) {
       return MatchService.internalServerError as ServiceReturn<{ message: 'Score updated' }>;
+    }
+  };
+
+  create = async (data: NewEntity<IMatch>): Promise<ServiceReturn<IMatch>> => {
+    try {
+      const { homeTeamId, awayTeamId } = data;
+      const teams = await (new TeamModel()).getByFieldFilter('id', [homeTeamId, awayTeamId]);
+      if (teams.length < 2) {
+        return { status: 404, data: { message: 'There is no team with such id!' } };
+      }
+      const match = await this.model.create(data);
+      return { status: 201, data: match };
+    } catch (error) {
+      return MatchService.internalServerError as ServiceReturn<IMatch>;
     }
   };
 }

@@ -26,4 +26,9 @@ export default class MatchController {
     const { status, data } = await this.service.update(id, { homeTeamGoals, awayTeamGoals });
     return res.status(status).json(data);
   };
+
+  create = async (req: Request, res: Response) => {
+    const { status, data } = await this.service.create(req.body);
+    return res.status(status).json(data);
+  };
 }

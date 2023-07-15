@@ -12,6 +12,6 @@ router.patch('/:id', tokenValidator.validate, controller.update);
 
 router.patch('/:id/finish', tokenValidator.validate, controller.finish);
 
-router.post('/', tokenValidator.validate);
+router.post('/', tokenValidator.validate, controller.create);
 
 export default router;

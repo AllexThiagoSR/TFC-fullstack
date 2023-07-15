@@ -20,4 +20,9 @@ export default class TeamModel implements ITeamModel {
     const newTeam = await this.teamModel.create(data);
     return newTeam;
   }
+
+  public async getByFieldFilter(field: string, value: unknown): Promise<ITeam[]> {
+    const foundTeams = await this.teamModel.findAll({ where: { [field]: value } });
+    return foundTeams;
+  }
 }

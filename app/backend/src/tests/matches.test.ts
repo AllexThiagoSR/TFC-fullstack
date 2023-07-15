@@ -6,6 +6,8 @@ import SequelizeMatch from '../database/models/SequelizeMatch';
 import { matchToCreate, matches } from './mocks/matches.mocks';
 import { app } from '../app';
 import JWTUtils from '../utils/JWTUtils';
+import SequelizeTeam from '../database/models/SequelizeTeam';
+import { teams } from './mocks/teams.mocks';
 
 chai.use(chaiHttp);
 
@@ -31,7 +33,9 @@ describe('Tests the matches routes', () => {
 
   it('POST /matches', async () => {
     const match = SequelizeMatch.build(matchToCreate);
+    const teamsBuilded = SequelizeTeam.bulkBuild([teams[0], teams[1]])
     sinon.stub(SequelizeMatch, 'create').resolves(match);
+    sinon.stub(SequelizeTeam, 'findAll').resolves(teamsBuilded);
     sinon.stub(JWTUtils.prototype, 'verify').returns({ id: 1, username: 'Admin', role: 'admin' });
     const chaiHttpResponse = await chai
       .request(app).post('/matches').send(matchToCreate).set('Authorization', 'abcsef22');
