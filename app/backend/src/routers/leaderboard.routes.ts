@@ -6,4 +6,6 @@ const router = Router();
 
 router.get('/home', controller.home);
 
+router.get('/away', controller.away);
+
 export default router;

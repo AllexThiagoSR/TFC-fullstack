@@ -1,9 +1,15 @@
 import TeamStatus from '../utils/TeamStatus';
 import MatchModel from '../models/Match.model';
 import ToAnalize from '../Interfaces/ToAnalize';
+import { ServiceReturn } from '../Interfaces/ServiceReturn';
 
 export default class LeaderboardService {
   private model: MatchModel;
+  private static internalServerError = {
+    status: 500,
+    data: { message: 'Internal server error' },
+  };
+
   constructor(model: MatchModel = new MatchModel()) {
     this.model = model;
   }
@@ -28,14 +34,29 @@ export default class LeaderboardService {
     return teamsStatus;
   };
 
-  leaderboardHome = async () => {
-    const matches = await this.model.getAll('false') as ToAnalize[];
-    const teamsStatus = LeaderboardService.getTeamsStatus(matches, 'home');
-    const sorted = teamsStatus.sort((a, b) => {
-      const valueA = (a.totalPoints + a.totalVictories + a.goalsBalance + a.goalsFavor);
-      const valueB = (b.totalPoints + b.totalVictories + b.goalsBalance + b.goalsFavor);
-      return valueB - valueA;
-    });
-    return { status: 200, data: sorted };
+  private static sortLeaderboard = (board: TeamStatus[]): TeamStatus[] => board.sort((a, b) => {
+    const valueA = (a.totalPoints + a.totalVictories + a.goalsBalance + a.goalsFavor);
+    const valueB = (b.totalPoints + b.totalVictories + b.goalsBalance + b.goalsFavor);
+    return valueB - valueA;
+  });;
+
+  leaderboardHome = async (): Promise<ServiceReturn<TeamStatus[]>> => {
+    try {
+      const matches = await this.model.getAll('false') as ToAnalize[];
+      const teamsStatus = LeaderboardService.getTeamsStatus(matches, 'home');
+      return { status: 200, data: LeaderboardService.sortLeaderboard(teamsStatus) };
+    } catch (error) {
+      return LeaderboardService.internalServerError as ServiceReturn<TeamStatus[]>;
+    }
+  };
+
+  leaderboardAway = async (): Promise<ServiceReturn<TeamStatus[]>> => {
+    try {
+      const matches = await this.model.getAll('false') as ToAnalize[];
+      const teamsStatus = LeaderboardService.getTeamsStatus(matches, 'away');
+      return { status: 200, data: LeaderboardService.sortLeaderboard(teamsStatus) };
+    } catch (error) {
+      return LeaderboardService.internalServerError as ServiceReturn<TeamStatus[]>;
+    }
   };
 }
