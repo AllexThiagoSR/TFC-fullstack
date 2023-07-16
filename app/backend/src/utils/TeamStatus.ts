@@ -12,6 +12,21 @@ export default class TeamStatus {
   public goalsBalance = 0;
   public efficiency = 0;
 
+  public mergeStatus = (statusToMerge: TeamStatus) => {
+    if (this.name === statusToMerge.name) {
+      this.totalPoints += statusToMerge.totalPoints;
+      this.totalGames += statusToMerge.totalGames;
+      this.totalVictories += statusToMerge.totalVictories;
+      this.totalDraws += statusToMerge.totalDraws;
+      this.totalLosses += statusToMerge.totalLosses;
+      this.goalsFavor += statusToMerge.goalsFavor;
+      this.goalsOwn += statusToMerge.goalsOwn;
+      this.goalsBalance += statusToMerge.goalsBalance;
+      this.calculateEfficiency();
+    }
+    return this;
+  };
+
   constructor(teamToAnalize: 'home' | 'away', firstMatch: ToAnalize) {
     this.name = firstMatch[`${teamToAnalize}Team`].teamName;
     this.updateStatus(teamToAnalize, firstMatch);

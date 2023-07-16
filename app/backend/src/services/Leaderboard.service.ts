@@ -79,4 +79,27 @@ export default class LeaderboardService {
       return LeaderboardService.internalServerError as ServiceReturn<TeamStatus[]>;
     }
   };
+
+  private static getTotalTeamsStatus = (
+    homeStatus: TeamStatus[],
+    awayStatus: TeamStatus[],
+  ) => {
+    const total = homeStatus.map((teamStatus) => {
+      const statusToMerge = awayStatus.find((t) => t.name === teamStatus.name);
+      return statusToMerge ? teamStatus.mergeStatus(statusToMerge) : teamStatus;
+    });
+    return total;
+  };
+
+  leaderboard = async (): Promise<ServiceReturn<TeamStatus[]>> => {
+    try {
+      const matches = await this.model.getAll('false') as ToAnalize[];
+      const teamsStatusHome = LeaderboardService.getTeamsStatus(matches, 'home');
+      const teamsStatusAway = LeaderboardService.getTeamsStatus(matches, 'away');
+      const teamsStatus = LeaderboardService.getTotalTeamsStatus(teamsStatusHome, teamsStatusAway);
+      return { status: 200, data: LeaderboardService.sortLeaderboard(teamsStatus) };
+    } catch (error) {
+      return LeaderboardService.internalServerError as ServiceReturn<TeamStatus[]>;
+    }
+  };
 }
