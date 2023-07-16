@@ -34,15 +34,31 @@ export default class LeaderboardService {
     return teamsStatus;
   };
 
-  private static sortLeaderboard = (board: TeamStatus[]): TeamStatus[] => board.sort((a, b) => {
-    const valueA = (
-      (a.totalPoints * 10) + (a.totalVictories) + (a.goalsBalance) + a.goalsFavor
-    );
-    const valueB = (
-      (b.totalPoints * 10) + (b.totalVictories) + (b.goalsBalance) + b.goalsFavor
-    );
-    return valueB - valueA;
-  });
+  // private static sortLeaderboard = (board: TeamStatus[]): TeamStatus[] => board.sort((a, b) => {
+  //   const valueA = (
+  //     (a.totalPoints * 10) + (a.totalVictories) + (a.goalsBalance) + a.goalsFavor
+  //   );
+  //   const valueB = (
+  //     (b.totalPoints * 10) + (b.totalVictories) + (b.goalsBalance) + b.goalsFavor
+  //   );
+  //   return valueB - valueA;
+  // });
+
+  private static sortLeaderboard = (board: TeamStatus[]): TeamStatus[] => {
+    const sorted = board.sort((a, b) => {
+      if (a.totalPoints === b.totalPoints) {
+        if (a.totalVictories === b.totalVictories) {
+          if (b.goalsBalance === a.goalsBalance) {
+            return b.goalsFavor - a.goalsFavor;
+          }
+          return b.goalsBalance - a.goalsBalance;
+        }
+        return b.totalVictories - a.totalVictories;
+      }
+      return b.totalPoints - a.totalPoints;
+    });
+    return sorted;
+  };
 
   leaderboardHome = async (): Promise<ServiceReturn<TeamStatus[]>> => {
     try {
